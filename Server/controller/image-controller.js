@@ -36,6 +36,7 @@ const getImage=async(req,res)=>{
         console.log('upload proces2');
         const readStream = gridfsBucket.openDownloadStream(file._id);
         readStream.pipe(res);
+        console.log('upload proces3');
     } catch (error) {
         res.status.json({msg:error.message})
     }

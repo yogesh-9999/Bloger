@@ -15,11 +15,14 @@ const singupUser = async (request, response) => {
     };
 
     const newUser = new User(user);
-    await newUser.save();
-
-    return response.status(200).json({ msg: "Signup successfull" });
+    // console.log(newUser);
+    let res = await newUser.save();
+console.log(res);
+    return response.status(200).json({ msg: "Signup successfull", res });
   } catch (error) {
-    return response.status(500).json({ msg: "Error while signing up user" });
+    return response
+      .status(500)
+      .json({ msg: "Error while signing up user", error: error });
   }
 };
 
@@ -53,14 +56,12 @@ const loginUser = async (req, res) => {
 
       await newToken.save();
 
-      res
-        .status(200)
-        .json({
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-          name: user.name,
-          username: user.username,
-        });
+      res.status(200).json({
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        name: user.name,
+        username: user.username,
+      });
     } else {
       res.status(400).json({ msg: "Password does not match" });
     }
@@ -73,12 +74,10 @@ const logoutUser = async (request, response) => {
   const token = request.body.token;
   await Token.deleteOne({ token: token });
 
-  response.status(204).json({ msg: 'logout successfull' });
-}
+  response.status(204).json({ msg: "logout successfull" });
+};
 module.exports = {
   singupUser,
   loginUser,
-  logoutUser
-  
- 
+  logoutUser,
 };
