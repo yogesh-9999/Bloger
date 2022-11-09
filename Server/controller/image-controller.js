@@ -1,7 +1,7 @@
 const grid =require('gridfs-stream');
 const mongoose=require('mongoose');
 
-const url = 'http://localhost:8000';
+const url = process.env.IMG_URL;
 
 let gfs, gridfsBucket;
 const conn = mongoose.connection;
@@ -23,22 +23,25 @@ const uploadImage =(req,res)=>{
     if(!req.file){
         return res.status(404).json("file not found");}
     const imageUrl=`${url}/file/${req.file.filename}`;
-
+    console.log('upload proces2');
     res.status(200).json(imageUrl);
     
 }
 
 const getImage=async(req,res)=>{
-    try {
+    try { 
+        
+        console.log('get image');
         const file=await gfs.files.findOne({
             filename: req.params.filename 
         });
         console.log('upload proces2');
         const readStream = gridfsBucket.openDownloadStream(file._id);
+        console.log('upload proces5');
         readStream.pipe(res);
-        console.log('upload proces3');
+        
     } catch (error) {
-        res.status.json({msg:error.message})
+        res.status(500).json({msg:error.message})
     }
 }
 
